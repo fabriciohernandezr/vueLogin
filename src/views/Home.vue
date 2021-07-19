@@ -1,26 +1,18 @@
 <template>
   <div class="home">
-    <navigation/>
-    <h1>Home</h1>
-    <p v-if="userLogged">User loggued: {{userLogged}}</p>
+    <img alt="Vue logo" src="../assets/logo.png">
+    <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>
 </template>
 
 <script>
-import Navigation from "../components/Navigation";
-import auth from "@/logic/auth";
-export default {
-  name: "Home",
-  components: {
-    navigation: Navigation
-  },
-  computed: {
-    userLogged() {
-      return auth.getUserLogged();
-    }
-  }
-};
-</script>
+// @ is an alias to /src
+import HelloWorld from '@/components/HelloWorld.vue'
 
-<style>
-</style>
+export default {
+  name: 'Home',
+  components: {
+    HelloWorld
+  }
+}
+</script>

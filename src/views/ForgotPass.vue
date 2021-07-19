@@ -1,6 +1,6 @@
 <template>
   <div class="register">
-    <h1 class="title">Registro</h1>
+    <h1 class="title">Recuperación de contraseña</h1>
     <form action class="form" @submit.prevent="register">
       <label class="form-label" for="#email">Email:</label>
       <input
@@ -19,7 +19,7 @@
         />
       </div>
       <label class="error">{{ datos.details }}</label>
-      <input class="form-submit" type="submit" value="Registrar" />
+      <input class="form-submit" type="submit" value="Sign Up" />
     </form>
   </div>
 </template>
@@ -39,8 +39,8 @@ export default {
   }),
   methods: {
     register() {
-      this.datos.details = ""
       let This = this;
+
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -50,16 +50,17 @@ export default {
         }),
       };
       fetch(
-        "https://back-dot-gnpac-317823.uc.r.appspot.com/api/v1/auth/solicitud",
+        "https://back-dot-gnpac-317823.uc.r.appspot.com/api/v1/auth/olvido",
         requestOptions
       )
         .then((response) => response.json())
         .then(function(data) {
           if (data.code) {
-                       This.status = false
-                  This.datos.details = data.details
+            This.status = false;
+            This.datos.details = data.details;
           } else {
-            This.datos.details = "Se ha enviado un correo de confirmación"
+            This.status = true;
+            This.datos.details = "Se ha enviado un correo de recuperación";
           }
         });
     },
@@ -106,9 +107,6 @@ export default {
     border-color: #1ab188;
   }
 }
-.loader {
-  text-align: center;
-}
 .form-submit {
   background: #ff9318;
   border: none;
@@ -122,8 +120,7 @@ export default {
   }
 }
 .error {
-  color: red;
-  margin-top: 2rem;
-  text-align: center;
+  margin: 1rem 0 0;
+  color: #ff4a96;
 }
 </style>

@@ -1,56 +1,121 @@
 <template>
   <div class="login">
-    <h1 class="title">Login in the page</h1>
+    <h1 class="title">Acceso</h1>
     <form action class="form" @submit.prevent="login">
       <label class="form-label" for="#email">Email:</label>
       <input
-        v-model="email"
         class="form-input"
         type="email"
         id="email"
         required
         placeholder="Email"
-      >
-      <label class="form-label" for="#password">Password:</label>
+        v-model="email"
+      />
+      <label class="form-label" for="#password">Contraseña:</label>
       <input
-        v-model="password"
         class="form-input"
         type="password"
         id="password"
-        placeholder="Password"
-      >
-      <p v-if="error" class="error">Has introducido mal el email o la contraseña.</p>
-      <input class="form-submit" type="submit" value="Login">
+        required
+        placeholder="Contraseña"
+        v-model="password"
+      />
+      <div class="loader">
+        <img
+          v-if="status"
+          style="width: 15px; padding:20px; text-align: center;"
+          src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+        />
+      </div>
+      <label class="error">{{ datos.message }}</label>
+      
+
+      <input
+        :disabled="status"
+        class="form-submit"
+        type="submit"
+        value="Ingresar"
+      />
     </form>
-    <p class="msg">¿No tienes cuenta?
-      <router-link to="/register">Regístrate</router-link>
-    </p>
+
+    <!--           <button v-on:click="registrar" class="form-submit" value="Registrar">Registrar</button>
+ -->
+    <div><router-link :to="{ name: 'Register' }">Registro</router-link></div>
+    <div>
+      <router-link :to="{ name: 'ForgotPass' }"
+        >Recuperación de contraseña</router-link
+      >
+    </div>
   </div>
 </template>
 
 <script>
-import auth from "@/logic/auth";
+import { mapState, mapActions } from "vuex";
+
 export default {
   data: () => ({
     email: "",
     password: "",
-    error: false
+    passwordRepeat: "",
+    loading: false,
+    status: false,
+    error: "hola",
+    datos: {
+      code: "",
+      message: "",
+    },
+    url:
+      "https://gnpac-317823.uc.r.appspot.com/auth?u=j1mdJF1RSpEZxMjYVdUTx40ZBN0Q1MUeM91NPFzVfpnRRNUSxNVUz9EO34SOKNkTs5EVOBTVy40MJJTTqZUbNBDeX5Eerh1YwgmVX5EbG5kT5smW1dXRltWMrRGdNZkWTZ1RaFTOFVWbo5WVsJ1VkJTVq5UQkpWTnFEMOd2Yq10MJR0T4lFVOJTQq5UMZRUTwEUROdXQE1kcwhEVDZFbRl2bqlUNWJTYpdXaJpXWy0kasRVTzkVbJZTS5NGasdkYop0QMlGMyIma1MkYwZ0Vi5mQwMGaK5WWoplMiBnTXFWeKdVWtpUaPlWSYpleW5WSztGRPFzaU5UeVpWTyUkaPlWQIVGbKNETpF1VZtGbtNWMkdlW6J0UatmQpJGb0JjYVpUaPlWSXRmeKlXZukjSp5UMJpXVJpUaPl2YHJGaKlXZ#",
   }),
   methods: {
-    async login() {
-      try {
-        await auth.login(this.email, this.password);
-        const user = {
-          email: this.email
-        };
-        auth.setUserLogged(user);
-        this.$router.push("/");
-      } catch (error) {
-        console.log(error);
-        this.error = true;
+    registrar: function(event) {
+      // `this` inside methods points to the Vue instance
+      // `event` is the native DOM event
+    },
+    login() {
+      this.status = true;
+      this.datos.message = "";
+      var md5 = require("md5");
+
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: this.email,
+          pwd: md5(this.password),
+        }),
+      };
+
+      let This = this
+      var response = fetch(
+        "https://back-dot-gnpac-317823.uc.r.appspot.com/api/v1/auth/login",
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((data) => (this.datos = data))
+        .then(function(data) {
+          if (data.token) {
+            window.location.href = "/#/home";
+          } else {
+            This.status = false
+            // alert(data.code + ": " + data.message);
+            //      window.location.href = "/";
+          }
+        });
+
+      console.log("response");
+      console.log(response);
+
+      if (response.code) {
+        console.log("response.code");
+        console.log(response.code == "ERR:EOF");
+        recargar();
       }
-    }
-  }
+      //   .then(data => (this.postId = data.id));
+
+      console.log(this.email);
+    },
+  },
 };
 </script>
 
@@ -61,6 +126,9 @@ export default {
 .title {
   text-align: center;
 }
+.loader {
+  text-align: center;
+}
 .form {
   margin: 3rem auto;
   display: flex;
@@ -69,7 +137,7 @@ export default {
   width: 20%;
   min-width: 350px;
   max-width: 100%;
-  background: rgba(19, 35, 47, 0.9);
+  background: rgba(22, 69, 105, 0.9);
   border-radius: 5px;
   padding: 40px;
   box-shadow: 0 4px 10px 4px rgba(0, 0, 0, 0.3);
@@ -94,7 +162,7 @@ export default {
   }
 }
 .form-submit {
-  background: #1ab188;
+  background: #ff9318;
   border: none;
   color: white;
   margin-top: 3rem;
@@ -102,15 +170,12 @@ export default {
   cursor: pointer;
   transition: background 0.2s;
   &:hover {
-    background: #0b9185;
+    background: #e07800;
   }
 }
 .error {
-  margin: 1rem 0 0;
-  color: #ff4a96;
-}
-.msg {
-  margin-top: 3rem;
+  color: red;
+  margin-top: 2rem;
   text-align: center;
 }
 </style>
