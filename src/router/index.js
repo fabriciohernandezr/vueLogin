@@ -6,33 +6,10 @@ import Register from "../views/Register.vue";
 const routes = [
   {
     path: "/",
-    name: Login,
+    name: "Home",
     component: () =>
-    import(/* webpackChunkName: "login" */ "../views/Login.vue")
+    import(/* webpackChunkName: "login" */ "../views/Home.vue")
   },
- { path: "/home", 
-  name:Home,
-  component: () =>
-  import(/* webpackChunkName: "login" */ "../views/Home.vue")
- },
- { path: "/auth", 
-  name:"Auth",
-   component: () =>
-  import(/* webpackChunkName: "login" */ "../views/Auth.vue")
- },
- { path: "/code", 
-  name:"Code",
-   component: () =>
-  import(/* webpackChunkName: "login" */ "../views/Code.vue")
- },
-  { path: "/register", 
-  name: Register,
-   component: () =>
-  import(/* webpackChunkName: "register" */ "../views/Register.vue"), },
-  { path: "/forgotPass", 
-  name: "ForgotPass",
-   component: () =>
-  import(/* webpackChunkName: "register" */ "../views/ForgotPass.vue"), },
   {
     path: "/about",
     name: "About",
